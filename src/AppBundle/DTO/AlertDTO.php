@@ -14,17 +14,46 @@ class AlertDTO
 {
 
     public $id;
-    public $type;
-    public $created_at;
-    public $finished_at;
-    public $gmap_created_position;
 
-public  function __construct(Alert $alert)
-{
-    $this->id = $alert->getId() ;
-    $this->type = $alert->getType() ;
-    $this->created_at = $alert->getCreatedAt() ;
-    $this->finished_at = $alert->getFinishedAt() ;
-    $this->gmap_created_position = $alert->getGmapCreatedPosition();
-}
+    public $positionLong;
+    public $positionLat;
+    public $positionCity;
+    public $positionDep;
+    public $positionCountry;
+    public $category;
+    public $createdAt;
+    public $finishedAt;
+    public $userCreator;
+    public $userHelpAlerts;
+    public $nbAlertsDeprecated;
+
+
+
+    public  function __construct(Alert $alert)
+    {
+        $this->id           = $alert->getId() ;
+
+
+        $this->positionLong     = $alert->getPositionLong();
+        $this->positionLat      = $alert->getPositionLat();
+        $this->positionCity     = $alert->getPositionCity();
+        $this->positionDep      = $alert->getPositionDep();
+        $this->positionCountry  = $alert->getPositionCountry();
+        $this->category         = $alert->getCategory();
+        $this->createdAt        = $alert->getCreatedAt();
+        $this->finishedAt       = $alert->getFinishedAt();
+        $user = new UserDTO( $alert->getUserCreator() );
+        $this->userCreator      = $user;
+        $nbDeprecated = 0;
+        foreach ($alert->getUserHelpAlerts() as $userHelpAlert) {
+            $this->userHelpAlerts[] = new UserHelpAlertDTO($userHelpAlert);
+            if($userHelpAlert->isDeprecated()) {
+                $nbDeprecated++;
+            }
+        }
+
+        $this->nbAlertsDeprecated = $nbDeprecated;
+
+
+    }
 }

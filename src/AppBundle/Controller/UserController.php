@@ -76,7 +76,7 @@ class UserController extends FOSRestController
      *  description="Supprime un utilisateur par son id",
      *  statusCodes = {
      *     204 = "Retourné si bien supprimé",
-     *     404 = "Retourné quand l'utilisateur n'est pas trouvé"
+     *     404 = "Retourné quand l'utilisatesur n'est pas trouvé"
      *   }
      * )
      * @Route("/users/{id}", name="user_delete")
@@ -152,7 +152,7 @@ class UserController extends FOSRestController
 
         if ($form->isValid()) {
 
-            $this->get('@service.user')->updateUser($form->getData(), $id);
+            $this->get('service.user')->updateUser( $form->getData() );
 
             $response = new Response();
             $response->setStatusCode(Codes::HTTP_ACCEPTED);

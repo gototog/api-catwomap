@@ -10,9 +10,13 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Alert;
 use AppBundle\Form\AlertFormType;
+use AppBundle\Form\AlertPositionFormType;
 use Doctrine\ORM\NoResultException;
 //use FOS\RestBundle\Request\ParamFetcher;
+use FOS\RestBundle\Controller\Annotations\QueryParam;
 use FOS\RestBundle\Controller\FOSRestController;
+use FOS\RestBundle\Request\ParamFetcher;
+use FOS\RestBundle\Request\ParamFetcherInterface;
 use FOS\RestBundle\Util\Codes;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
@@ -36,16 +40,23 @@ class AlertController extends FOSRestController
      *         200="Retourné quand tout va bien",
      *     }
      * )
-     * @RequestParam(name="user_email", description="email of the user")
-     * @RequestParam(name="user_id", requirements="\d+", description="id of the user")
-     * @Route("/alerts", name="alert_get")
+     * @QueryParam(name="creator_id", requirements="\d+", description="id of the user")
+     * @QueryParam(name="dep", description="departement number like '38'")
+     * @QueryParam(name="city", requirements="[a-z]+", description="city name like 'grenoble' ")
+     * @QueryParam(name="country", requirements="[a-z]+", description="country name 'france' ")
+     * @Route("/alerts", name="alerts_get")
      * @Method("GET")
      *
      * @return View
      */
-    public function getAlertsAction() {
+    public function getAlertsAction(ParamFetcherInterface $paramFetcher) {
+        $department = $paramFetcher->get("dep", false);
+        $country = $paramFetcher->get("country", false);
+        $city = $paramFetcher->get("city", false);
+        $creator = $paramFetcher->get("creator_id", false);
+        $alerts = $this->get('service.alert')->getAlerts($city, $department, $country);
 
-        $alerts = $this->get('service.alert')->getAlerts();
+
         return View::create($alerts, Codes::HTTP_OK);
     }
 
@@ -56,7 +67,6 @@ class AlertController extends FOSRestController
      *  description="Retourne une alerte",
      *  output="AppBundle\DTO\AlertDTO",
      *  parameters={
-     *      {"name"="id", "dataType"="integer", "required"=true, "description"="id de l'alerte"}
      *  },
      *  statusCodes={
      *          200="Retourné quand tout va bien",
@@ -65,6 +75,10 @@ class AlertController extends FOSRestController
      * )
      * @Route("/alerts/{id}", name="alert_get")
      * @Method("GET")
+     *
+     * @param integer $id    id de l'alerte
+     *
+     * @return \AppBundle\DTO\AlertDTO
      */
     public function getAlertAction($id) {
 
@@ -146,7 +160,12 @@ class AlertController extends FOSRestController
      */
     public function updateAlertAction(Request $request, $id) {
 
-        $alert = $this->get("service.alert")->getAlertById($id);
+        try {
+            $alert = $this->get('service.alert')->getAlertById($id);
+        } catch(NoResultException $e) {
+            throw $this->createNotFoundException("Alerte d'id $id n'existe pas");
+        }
+
         $form = $this->createForm(new AlertFormType(), $alert);
         $form->handleRequest($request);
 
@@ -163,5 +182,92 @@ class AlertController extends FOSRestController
         return View::create($form, 400);
 
     }
+    /**
+     * @ApiDoc(
+     *  resource=true,
+     *  description="Met à jour une alerte partiellement",
+     *  statusCodes = {
+     *     204 = "Retourné lorsque bien modifié",
+     *     400 = "Retourné lorsque probleme de paramètre invalide",
+     *     404 = "Retourné quand l'alerte n'est pas trouvé"
+     *   }
+     * )
+     * @RequestParam(name="positionLong", requirements="[-+]?(\d*[.])?\d+", description="longitude like 31.487")
+     * @RequestParam(name="positionLat", requirements="[-+]?(\d*[.])?\d+", description="latitude like -31.487")
+     * @RequestParam(name="category", description="category name 'vol' ")
+     * @Route("/alerts/{id}", name="alert_patch")
+     * @Method("PATCH")
+     */
+    public function patchAlertAction( $id, ParamFetcherInterface $paramFetcher) {
+
+        $errors = [];
+        try {
+            $alert = $this->get("doctrine.orm.default_entity_manager")->getRepository("AppBundle:Alert")->getAlertById($id);
+
+
+        } catch(NoResultException $e) {
+            throw $this->createNotFoundException("Alerte d'id $id n'existe pas");
+        }
+        $positionLat = $paramFetcher->get("positionLat", false);
+        $positionLong = $paramFetcher->get("positionLong", false);
+        $category = $paramFetcher->get("category", false);
+
+
+
+
+        if (
+            ($positionLong != "" && $positionLat == "")
+            || ($positionLong == "" && $positionLat != "")
+        ) {
+            $errors[]= "La lattitude et la longitude doivent être renseigné";
+        } else {
+            $alert->setPositionLat($positionLat);
+            $alert->setPositionLong($positionLong);
+        }
+        if($category !="") {
+            $alert->setCategory($category);
+        }
+
+        //beurk dégeulasse mais probleme pour valider le formulaire
+        if( $positionLat == ""
+            &&  $category == ""
+            && $positionLong == "" ) {
+            $errors[]= "aucun parametre";
+        }
+
+        if( count($errors) == 0 ) {
+
+            $this->get('service.alert')->updateAlert($alert);
+
+            $response = new Response();
+            $response->setStatusCode(204);
+
+            return $response;
+        } else {
+            return View::create($errors, 400);
+        }
+
+    }
+
+    private function processForm(Alert      $alert, array $parameters, $method = "PUT")
+    {
+        $form = $this->get('form.factory')->create(new AlertFormType(), $alert, array('method' => $method));
+
+        $clearIfMissing =   ('PATCH' !== $method);
+
+        $form->submit($parameters, $clearIfMissing);
+        if ($form->isValid()) {
+
+            $page = $form->getData();
+            $this->om->persist($page);
+            $this->om->flush($page);
+
+            return $page;
+        }
+
+        throw new InvalidFormException('Invalid submitted data', $form);
+    }
+
+
 
 }

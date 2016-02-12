@@ -16,7 +16,9 @@ class UserDTO
     public $firstname;
     public $lastname;
     public $email;
-    public $gmap_position;
+    public $positionLat;
+    public $positionLong;
+    public $photo;
 
     public  function __construct(User $user)
     {
@@ -24,6 +26,8 @@ class UserDTO
         $this->firstname = $user->getFirstname() ;
         $this->lastname = $user->getLastname() ;
         $this->email = $user->getEmail() ;
-        $this->gmap_position = $user->getGmapPosition() ;
+        $this->positionLong = $user->getPositionLong() ;
+        $this->positionLat = $user->getPositionLat() ;
+        $this->photo = $user->getPhoto() ;
     }
 }

@@ -1,6 +1,6 @@
 services:
     repository.user:
-        class: AppBundle\Repository\AlertRepository
+        class: AppBundle\Repository\UserRepository
         factory_service: doctrine.orm.default_entity_manager
         factory_method: getRepository
         arguments: ['AppBundle:User']

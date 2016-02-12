@@ -32,8 +32,8 @@ class CrudAlertService
     /**
      * @return \AppBundle\DTO\AlertDTO[]
      */
-    public function getAlerts() {
-        $alerts = $this->alertRepository->getAlerts();
+    public function getAlerts($city, $department, $country) {
+        $alerts = $this->alertRepository->getAlerts($city, $department, $country);
         $dtos = [];
         foreach($alerts as $alert) {
             $dtos[]= new AlertDTO($alert);
@@ -67,7 +67,7 @@ class CrudAlertService
      *
      * @return AlertDTO
      */
-    public function updateAlert(Alert $alert, $id) {
+    public function updateAlert(Alert $alert) {
         $this->em->persist($alert);
         $this->em->flush();
         return new AlertDTO($alert);

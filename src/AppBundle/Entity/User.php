@@ -53,23 +53,37 @@ class User
     /**
      * @var string
      *
-     * @ORM\Column(name="gmapPosition", type="string", length=255, nullable=true)
+     * @ORM\Column(name="position_long", type="string", length=255, nullable=true)
      */
-    private $gmapPosition;
+    private $positionLong;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="position_lat", type="string", length=255, nullable=true)
+     */
+    private $positionLat;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="photo", type="string", length=255, nullable=true)
+     */
+    private $photo;
 
     /**
      * @var Alert
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Alert" , mappedBy="user")
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Alert" , mappedBy="userCreator")
      */
-    private $alerts;
-
-
-
-
+    private $alertsCreated;
 
     /**
-     * Get id
-     *
+     * @var Alert
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\UserHelpAlert" , mappedBy="alert")
+     */
+    private $userHelpAlerts;
+
+    /**
      * @return int
      */
     public function getId()
@@ -78,46 +92,14 @@ class User
     }
 
     /**
-     * Set lastname
-     *
-     * @param string $lastname
-     *
-     * @return User
+     * @param int $id
      */
-    public function setLastname($lastname)
+    public function setId($id)
     {
-        $this->lastname = $lastname;
-
-        return $this;
+        $this->id = $id;
     }
 
     /**
-     * Get lastname
-     *
-     * @return string
-     */
-    public function getLastname()
-    {
-        return $this->lastname;
-    }
-
-    /**
-     * Set email
-     *
-     * @param string $email
-     *
-     * @return User
-     */
-    public function setEmail($email)
-    {
-        $this->email = strtolower($email) ;
-
-        return $this;
-    }
-
-    /**
-     * Get email
-     *
      * @return string
      */
     public function getEmail()
@@ -126,22 +108,46 @@ class User
     }
 
     /**
-     * Set firstname
-     *
-     * @param string $firstname
-     *
-     * @return User
+     * @param string $email
      */
-    public function setFirstname($firstname)
+    public function setEmail($email)
     {
-        $this->firstname = $firstname;
-
-        return $this;
+        $this->email = $email;
     }
 
     /**
-     * Get firstname
-     *
+     * @return string
+     */
+    public function getPassword()
+    {
+        return $this->password;
+    }
+
+    /**
+     * @param string $password
+     */
+    public function setPassword($password)
+    {
+        $this->password = $password;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLastname()
+    {
+        return $this->lastname;
+    }
+
+    /**
+     * @param string $lastname
+     */
+    public function setLastname($lastname)
+    {
+        $this->lastname = $lastname;
+    }
+
+    /**
      * @return string
      */
     public function getFirstname()
@@ -150,32 +156,93 @@ class User
     }
 
     /**
-     * Set gmapPosition
-     *
-     * @param string $gmapPosition
-     *
-     * @return User
+     * @param string $firstname
      */
-    public function setGmapPosition($gmapPosition)
+    public function setFirstname($firstname)
     {
-        $this->gmapPosition = $gmapPosition;
-
-        return $this;
+        $this->firstname = $firstname;
     }
 
     /**
-     * Get gmapPosition
-     *
      * @return string
      */
-    public function getGmapPosition()
+    public function getPositionLong()
     {
-        return $this->gmapPosition;
+        return $this->positionLong;
     }
 
-    public function setPassword($password) {
-        $this->password = $password;
+    /**
+     * @param string $positionLong
+     */
+    public function setPositionLong($positionLong)
+    {
+        $this->positionLong = $positionLong;
     }
+
+    /**
+     * @return string
+     */
+    public function getPositionLat()
+    {
+        return $this->positionLat;
+    }
+
+    /**
+     * @param string $positionLat
+     */
+    public function setPositionLat($positionLat)
+    {
+        $this->positionLat = $positionLat;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPhoto()
+    {
+        return $this->photo;
+    }
+
+    /**
+     * @param string $photo
+     */
+    public function setPhoto($photo)
+    {
+        $this->photo = $photo;
+    }
+
+    /**
+     * @return Alert
+     */
+    public function getAlertsCreated()
+    {
+        return $this->alertsCreated;
+    }
+
+    /**
+     * @param Alert $alertsCreated
+     */
+    public function setAlertsCreated($alertsCreated)
+    {
+        $this->alertsCreated = $alertsCreated;
+    }
+
+    /**
+     * @return Alert
+     */
+    public function getUserHelpAlerts()
+    {
+        return $this->userHelpAlerts;
+    }
+
+    /**
+     * @param Alert $userHelpAlerts
+     */
+    public function setUserHelpAlerts($userHelpAlerts)
+    {
+        $this->userHelpAlerts = $userHelpAlerts;
+    }
+
 
 
     /**

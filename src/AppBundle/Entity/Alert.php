@@ -3,11 +3,11 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use AppBundle\Validator\Constraint\BothFieldsConstraint;
 
 
 /**
  * Alert
- *
  * @ORM\Table(name="alert")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\AlertRepository")
  */
@@ -30,16 +30,40 @@ class Alert
     /**
      * @var string
      *
-     * @ORM\Column(name="gmapCreatedPosition", type="string", length=255)
+     * @ORM\Column(name="position_long", type="string", length=255)
      */
-    private $gmapCreatedPosition;
+    private $positionLong;
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="position_lat", type="string", length=255)
+     */
+    private $positionLat;
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="position_city", type="string", length=255)
+     */
+    private $positionCity;
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="position_dep", type="string", length=255)
+     */
+    private $positionDep;
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="position_country", type="string", length=255)
+     */
+    private $positionCountry;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="type", type="string", length=255)
+     * @ORM\Column(name="category", type="string", length=255)
      */
-    private $type;
+    private $category;
 
     /**
      * @var \DateTime
@@ -48,12 +72,6 @@ class Alert
      */
     private $createdAt;
 
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="updatedAt", type="datetime", nullable=true)
-     */
-    private $updatedAt;
 
     /**
      * @var \DateTime
@@ -64,9 +82,15 @@ class Alert
 
     /**
      * @var User
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User" , inversedBy="alerts")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User" , inversedBy="alertsCreated")
      */
-    private $user;
+    private $userCreator;
+
+    /**
+     * @var UserHelpAlert
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\UserHelpAlert" , mappedBy="alert")
+     */
+    private $userHelpAlerts;
 
     /**
      * Get id
@@ -79,46 +103,102 @@ class Alert
     }
 
     /**
-     * Set gmapCreatedPosition
-     *
-     * @param string $gmapCreatedPosition
-     *
-     * @return Alert
-     */
-    public function setGmapCreatedPosition($gmapCreatedPosition)
-    {
-        $this->gmapCreatedPosition = $gmapCreatedPosition;
-
-        return $this;
-    }
-
-    /**
-     * Get gmapCreatedPosition
-     *
      * @return string
      */
-    public function getGmapCreatedPosition()
+    public function getPositionLong()
     {
-        return $this->gmapCreatedPosition;
+        return $this->positionLong;
     }
 
     /**
-     * Set createdAt
-     *
-     * @param \DateTime $createdAt
-     *
-     * @return Alert
+     * @param string $positionLong
      */
-    public function setCreatedAt($createdAt)
+    public function setPositionLong($positionLong)
     {
-        $this->createdAt = $createdAt;
-
-        return $this;
+        $this->positionLong = $positionLong;
     }
 
     /**
-     * Get createdAt
-     *
+     * @return string
+     */
+    public function getPositionLat()
+    {
+        return $this->positionLat;
+    }
+
+    /**
+     * @param string $positionLat
+     */
+    public function setPositionLat($positionLat)
+    {
+        $this->positionLat = $positionLat;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPositionCity()
+    {
+        return $this->positionCity;
+    }
+
+    /**
+     * @param string $positionCity
+     */
+    public function setPositionCity($positionCity)
+    {
+        $this->positionCity = $positionCity;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPositionDep()
+    {
+        return $this->positionDep;
+    }
+
+    /**
+     * @param string $positionDep
+     */
+    public function setPositionDep($positionDep)
+    {
+        $this->positionDep = $positionDep;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPositionCountry()
+    {
+        return $this->positionCountry;
+    }
+
+    /**
+     * @param string $positionCountry
+     */
+    public function setPositionCountry($positionCountry)
+    {
+        $this->positionCountry = $positionCountry;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCategory()
+    {
+        return $this->category;
+    }
+
+    /**
+     * @param string $category
+     */
+    public function setCategory($category)
+    {
+        $this->category = $category;
+    }
+
+    /**
      * @return \DateTime
      */
     public function getCreatedAt()
@@ -127,46 +207,14 @@ class Alert
     }
 
     /**
-     * Set updatedAt
-     *
-     * @param \DateTime $updatedAt
-     *
-     * @return Alert
+     * @param \DateTime $createdAt
      */
-    public function setUpdatedAt($updatedAt)
+    public function setCreatedAt($createdAt)
     {
-        $this->updatedAt = $updatedAt;
-
-        return $this;
+        $this->createdAt = $createdAt;
     }
 
     /**
-     * Get updatedAt
-     *
-     * @return \DateTime
-     */
-    public function getUpdatedAt()
-    {
-        return $this->updatedAt;
-    }
-
-    /**
-     * Set finishedAt
-     *
-     * @param \DateTime $finishedAt
-     *
-     * @return Alert
-     */
-    public function setFinishedAt($finishedAt)
-    {
-        $this->finishedAt = $finishedAt;
-
-        return $this;
-    }
-
-    /**
-     * Get finishedAt
-     *
      * @return \DateTime
      */
     public function getFinishedAt()
@@ -175,20 +223,46 @@ class Alert
     }
 
     /**
-     * @return string
+     * @param \DateTime $finishedAt
      */
-    public function getType()
+    public function setFinishedAt($finishedAt)
     {
-        return $this->type;
+        $this->finishedAt = $finishedAt;
     }
 
     /**
-     * @param string $type
+     * @return User
      */
-    public function setType($type)
+    public function getUserCreator()
     {
-        $this->type = $type;
+        return $this->userCreator;
     }
+
+    /**
+     * @param User $userCreator
+     */
+    public function setUserCreator(User $userCreator)
+    {
+        $this->userCreator = $userCreator;
+    }
+
+    /**
+     * @return UserHelpAlert[]
+     */
+    public function getUserHelpAlerts()
+    {
+        return $this->userHelpAlerts;
+    }
+
+    /**
+     * @param UserHelpAlert[] $userHelpAlerts
+     */
+    public function setUserHelpAlerts( $userHelpAlerts)
+    {
+        $this->userHelpAlerts = $userHelpAlerts;
+    }
+
+
 
 
 }
