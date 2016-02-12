@@ -68,6 +68,13 @@ class CrudAlertService
      * @return AlertDTO
      */
     public function updateAlert(Alert $alert) {
+        $infos = Geocoder::getLocation($alert->getPositionLat(), $alert->getPositionLong() );
+        $city = Geocoder::getCityFromAddress($infos);
+        $department = Geocoder::getDepartmentFromAddress($infos);
+        $country = Geocoder::getCountryFromAddress($infos);
+        $alert->setPositionCity($city);
+        $alert->setPositionDep($department);
+        $alert->setPositionCountry($country);
         $this->em->persist($alert);
         $this->em->flush();
         return new AlertDTO($alert);

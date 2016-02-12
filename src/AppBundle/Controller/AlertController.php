@@ -11,6 +11,7 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\Alert;
 use AppBundle\Form\AlertFormType;
 use AppBundle\Form\AlertPositionFormType;
+use AppBundle\Services\Geocoder;
 use Doctrine\ORM\NoResultException;
 //use FOS\RestBundle\Request\ParamFetcher;
 use FOS\RestBundle\Controller\Annotations\QueryParam;
@@ -107,6 +108,8 @@ class AlertController extends FOSRestController
     {
         $this->get("service.alert")->deleteAlertById($id);
     }
+
+
     /**
      * @ApiDoc(
      *  resource=true,
@@ -124,7 +127,7 @@ class AlertController extends FOSRestController
      */
     public function createAlertAction(Request $request) {
 
-        $form = $this->createForm(new AlertFormType(), new Alert());
+        $form = $this->createForm(AlertFormType::class, new Alert());
         $form->handleRequest($request);
 
         if ($form->isValid()) {
@@ -220,7 +223,7 @@ class AlertController extends FOSRestController
             || ($positionLong == "" && $positionLat != "")
         ) {
             $errors[]= "La lattitude et la longitude doivent être renseigné";
-        } else {
+        } elseif ( $positionLong != "" ) {
             $alert->setPositionLat($positionLat);
             $alert->setPositionLong($positionLong);
         }
@@ -242,7 +245,11 @@ class AlertController extends FOSRestController
             $response = new Response();
             $response->setStatusCode(204);
 
-            return $response;
+            $infos = Geocoder::getLocation($alert->getPositionLat(), $alert->getPositionLong() );
+
+
+            return  $response ;
+
         } else {
             return View::create($errors, 400);
         }
