@@ -13,7 +13,9 @@ use AppBundle\Entity\User;
 use AppBundle\Form\UserFormType;
 use AppBundle\Form\UserProfilFormType;
 use Doctrine\ORM\NoResultException;
+use FOS\RestBundle\Controller\Annotations\RequestParam;
 use FOS\RestBundle\Controller\FOSRestController;
+use FOS\RestBundle\Request\ParamFetcherInterface;
 use FOS\RestBundle\Util\Codes;
 use FOS\RestBundle\View\View;
 
@@ -98,7 +100,6 @@ class UserController extends FOSRestController
      *  statusCodes = {
      *     201 = "Retourné lorsque bien créé",
      *     400 = "Retourné lorsque probleme de paramètre invalide",
-     *     404 = "Retourné quand l'utilisateur n'est pas trouvé"
      *   }
      * )
      * @Route("/users", name="user_create")
@@ -160,6 +161,65 @@ class UserController extends FOSRestController
         }
 
         return View::create($form, Codes::HTTP_BAD_REQUEST);
+
+    }
+
+
+    /**
+     * @ApiDoc(
+     *  resource=true,
+     *  description="Met à jour un utilisateur partiellement",
+     *  statusCodes = {
+     *     204 = "Retourné lorsque bien modifié",
+     *     400 = "Retourné lorsque probleme de paramètre invalide",
+     *     404 = "Retourné quand l'utilisateur n'est pas trouvé"
+     *   }
+     * )
+     * @RequestParam(name="positionLong", requirements="[-+]?(\d*[.])?\d+", description="longitude like 31.487")
+     * @RequestParam(name="positionLat", requirements="[-+]?(\d*[.])?\d+", description="latitude like -31.487")
+     * @Route("/users/{id}", name="alert_patch")
+     * @Method("PATCH")
+     */
+    public function patchUserAction( $id, ParamFetcherInterface $paramFetcher) {
+
+        $errors = [];
+        try {
+            $user = $this->get("doctrine.orm.default_entity_manager")->getRepository("AppBundle:User")->getUserById($id);
+        } catch(NoResultException $e) {
+            throw $this->createNotFoundException("Utilisateur d'id $id n'existe pas");
+        }
+        $positionLat = $paramFetcher->get("positionLat", false);
+        $positionLong = $paramFetcher->get("positionLong", false);
+
+        if (
+            ($positionLong != "" && $positionLat == "")
+            || ($positionLong == "" && $positionLat != "")
+        ) {
+            $errors[]= "La lattitude et la longitude doivent être renseigné";
+        } elseif ( $positionLong != "" ) {
+            $user->setPositionLat($positionLat);
+            $user->setPositionLong($positionLong);
+        }
+
+        //beurk dégeulasse mais probleme pour valider le formulaire
+        if( $positionLat == ""
+            && $positionLong == ""
+        ) {
+            $errors[]= "aucun parametre";
+        }
+
+        if( count($errors) == 0 ) {
+
+            $this->get('service.user')->updateUser($user);
+
+            $response = new Response();
+            $response->setStatusCode(204);
+
+            return  $response ;
+
+        } else {
+            return View::create($errors, 400);
+        }
 
     }
 

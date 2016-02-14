@@ -2,8 +2,10 @@
 namespace AppBundle\Services;
 
 use AppBundle\DTO\AlertDTO;
+use AppBundle\DTO\UserHelpAlertDTO;
 use AppBundle\Entity\Alert;
 use AppBundle\Entity\User;
+use AppBundle\Entity\UserHelpAlert;
 use AppBundle\Repository\AlertRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NoResultException;
@@ -74,6 +76,24 @@ class CrudAlertService
         return new AlertDTO($alert);
     }
 
+
+    /**
+     * @param UserHelpAlert $userHelpAlert
+     * @param User          $user
+     * @param Alert         $alert
+     *
+     * @return UserHelpAlertDTO
+     */
+    public function createUserHelpAlert(UserHelpAlert $userHelpAlert, User $user, Alert $alert) {
+        $userHelpAlert->setAlert( $alert );
+        $userHelpAlert->setUser( $user );
+
+        $this->em->persist($userHelpAlert);
+        $this->em->flush();
+
+        return new UserHelpAlertDTO($userHelpAlert);
+    }
+
     /**
      * @param Alert $alert
      *
@@ -90,6 +110,18 @@ class CrudAlertService
         $this->em->persist($alert);
         $this->em->flush();
         return new AlertDTO($alert);
+    }
+
+    /**
+     * @param Alert $alert
+     *
+     * @return AlertDTO
+     */
+    public function updateUserHelpAlert(UserHelpAlert $alert) {
+
+        $this->em->persist($alert);
+        $this->em->flush();
+        return new UserHelpAlertDTO($alert);
     }
 
 

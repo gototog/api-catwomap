@@ -22,7 +22,7 @@ class UserRepository extends \Doctrine\ORM\EntityRepository
         $qb = $this->createQueryBuilder('user');
         $qb
             ->addSelect('alerts')
-            ->leftJoin('user.alerts', 'alerts')
+            ->leftJoin('user.alertsCreated', 'alerts')
             ->andWhere('user.id = :id')
             ->setParameter('id',$id)
             ;

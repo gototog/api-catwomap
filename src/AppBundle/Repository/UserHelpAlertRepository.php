@@ -1,7 +1,7 @@
 <?php
 
 namespace AppBundle\Repository;
-use AppBundle\Entity\User;
+use AppBundle\Entity\UserHelpAlert;
 
 /**
  * UserRepository
@@ -14,45 +14,36 @@ class UserHelpAlertRepository extends \Doctrine\ORM\EntityRepository
     /**
      * @param $id
      *
-     * @return User
+     * @return UserHelpAlert
      * @throws \Doctrine\ORM\NoResultException
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function getUserById($id) {
-        $qb = $this->createQueryBuilder('user');
+    public function getUserHelpAlertById($id) {
+        $qb = $this->createQueryBuilder('user_help_alert');
         $qb
-            ->addSelect('alerts')
-            ->leftJoin('user.alerts', 'alerts')
-            ->andWhere('user.id = :id')
+            ->andWhere('user_help_alert.id = :id')
             ->setParameter('id',$id)
-            ;
-        return $qb->getQuery()->getSingleResult();
-    } /**
-     * @param $email
-     *
-     * @return User
-     * @throws \Doctrine\ORM\NoResultException
-     * @throws \Doctrine\ORM\NonUniqueResultException
-     */
-    public function getUserByEmail($email) {
-        $qb = $this->createQueryBuilder('user');
-        $qb
-            ->andWhere('user.email = :email')
-            ->setParameter('email',$email)
             ;
         return $qb->getQuery()->getSingleResult();
     }
 
     /**
+     * @param $userId
+     * @param $alertId
      *
-     * @return User[]
+     * @return UserHelpAlert
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function getUsers() {
-        $qb = $this->createQueryBuilder('user');
-//        $qb
-//            ->andWhere('user.id = :id')
-//            ->setParameter('id',$id)
-//            ;
-        return $qb->getQuery()->getResult();
+    public function getUserHelpAlertByAlertAndUser($userId, $alertId) {
+        $qb = $this->createQueryBuilder('user_help_alert');
+        $qb
+            ->andWhere('user_help_alert.alert = :alert')
+            ->setParameter('alert',$alertId)
+            ->andWhere('user_help_alert.user = :user')
+            ->setParameter('user',$userId)
+            ;
+        return $qb->getQuery()->getSingleResult();
     }
+
 }
