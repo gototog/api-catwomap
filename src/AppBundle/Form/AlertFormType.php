@@ -11,29 +11,29 @@ namespace AppBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class UserFormType extends AbstractType {
+class AlertFormType extends AbstractType {
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('firstname');
-        $builder->add('lastname');
-        $builder->add('email');
-        $builder->add('password');
+        $builder->add('userCreator');
+        $builder->add('positionLong');
+        $builder->add('positionLat');
+        $builder->add('category');
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function setDefaultOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class'        => 'AppBundle\Entity\User',
+            'data_class'        => 'AppBundle\Entity\Alert',
             'csrf_protection'   => false,
         ));
     }
 
     public function getName()
     {
-        return 'user_type';
+        return 'alert_type';
     }
 
 }

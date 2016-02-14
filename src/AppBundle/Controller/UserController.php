@@ -92,22 +92,21 @@ class UserController extends FOSRestController
     }
     /**
      * @ApiDoc(
-     *  resource=true,
      *  description="Ajoute un utilisateur",
      *  output="AppBundle\DTO\UserDTO",
-     *  input = {"class" = "AppBundle\Form\UserFormType", "paramType" = "query"},
+     *  input = "AppBundle\Form\UserFormType",
      *  statusCodes = {
      *     201 = "Retourné lorsque bien créé",
      *     400 = "Retourné lorsque probleme de paramètre invalide",
      *     404 = "Retourné quand l'utilisateur n'est pas trouvé"
      *   }
      * )
-     * @Route("/users/{id}", name="user_create")
+     * @Route("/users", name="user_create")
      * @Method("POST")
      */
     public function createUserAction(Request $request) {
 
-        $form = $this->createForm(new UserFormType(), new User());
+        $form = $this->createForm(UserFormType::class, new User());
         $form->handleRequest($request);
 
         if ($form->isValid()) {

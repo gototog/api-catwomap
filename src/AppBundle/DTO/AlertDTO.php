@@ -45,6 +45,7 @@ class AlertDTO
         $user = new UserDTO( $alert->getUserCreator() );
         $this->userCreator      = $user;
         $nbDeprecated = 0;
+
         foreach ($alert->getUserHelpAlerts() as $userHelpAlert) {
             $this->userHelpAlerts[] = new UserHelpAlertDTO($userHelpAlert);
             if($userHelpAlert->isDeprecated()) {

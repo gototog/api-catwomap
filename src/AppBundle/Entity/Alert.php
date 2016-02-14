@@ -4,7 +4,7 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use AppBundle\Validator\Constraint\BothFieldsConstraint;
-
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Alert
@@ -21,6 +21,7 @@ class Alert
     /**
      * @var int
      *
+     *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
@@ -29,13 +30,13 @@ class Alert
 
     /**
      * @var string
-     *
+     * @Assert\NotBlank()
      * @ORM\Column(name="position_long", type="string", length=255)
      */
     private $positionLong;
     /**
      * @var string
-     *
+     * @Assert\NotBlank()
      * @ORM\Column(name="position_lat", type="string", length=255)
      */
     private $positionLat;
@@ -60,7 +61,7 @@ class Alert
 
     /**
      * @var string
-     *
+     * @Assert\NotBlank()
      * @ORM\Column(name="category", type="string", length=255)
      */
     private $category;
@@ -90,7 +91,7 @@ class Alert
      * @var UserHelpAlert
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\UserHelpAlert" , mappedBy="alert")
      */
-    private $userHelpAlerts;
+    private $userHelpAlerts = [];
 
     /**
      * Get id

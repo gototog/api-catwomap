@@ -10,7 +10,6 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Alert;
 use AppBundle\Form\AlertFormType;
-use AppBundle\Form\AlertPositionFormType;
 use AppBundle\Services\Geocoder;
 use Doctrine\ORM\NoResultException;
 //use FOS\RestBundle\Request\ParamFetcher;
@@ -114,15 +113,15 @@ class AlertController extends FOSRestController
      * @ApiDoc(
      *  resource=true,
      *  description="Ajoute une alerte",
-     *  output = "Epsi\RestBundle\Alert",
-     *  input = "alert_type",
+     *  output = "AppBundle\DTO\AlertDTO",
+     *  input = "AppBundle\Form\AlertFormType",
      *  statusCodes = {
      *     201 = "Retourné lorsque bien créé",
      *     400 = "Retourné lorsque probleme de paramètre invalide",
      *     404 = "Retourné quand l'alerte n'est pas trouvé"
      *   }
      * )
-     * @Route("/alerts/{id}", name="alert_create")
+     * @Route("/alerts", name="alert_create")
      * @Method("POST")
      */
     public function createAlertAction(Request $request) {
@@ -132,13 +131,13 @@ class AlertController extends FOSRestController
 
         if ($form->isValid()) {
 
-            $id_created = $this->get('service.alert')->createAlert($form->getData());
+            $alertDTO = $this->get('service.alert')->createAlert($form->getData());
 
             $response = new Response();
             $response->setStatusCode(201);
 
             $response->headers->set('Location',
-                                    $this->generateUrl('alert_get', array('id' => $id_created))
+                                    $this->generateUrl('alert_get', array('id' => $alertDTO->id))
             );
 
             return $response;
@@ -198,6 +197,7 @@ class AlertController extends FOSRestController
      * @RequestParam(name="positionLong", requirements="[-+]?(\d*[.])?\d+", description="longitude like 31.487")
      * @RequestParam(name="positionLat", requirements="[-+]?(\d*[.])?\d+", description="latitude like -31.487")
      * @RequestParam(name="category", description="category name 'vol' ")
+     * @RequestParam(name="finished",requirements="[0-1]", description="category name 'vol' ")
      * @Route("/alerts/{id}", name="alert_patch")
      * @Method("PATCH")
      */
@@ -214,6 +214,7 @@ class AlertController extends FOSRestController
         $positionLat = $paramFetcher->get("positionLat", false);
         $positionLong = $paramFetcher->get("positionLong", false);
         $category = $paramFetcher->get("category", false);
+        $finished = $paramFetcher->get("finished", false);
 
 
 
@@ -227,14 +228,23 @@ class AlertController extends FOSRestController
             $alert->setPositionLat($positionLat);
             $alert->setPositionLong($positionLong);
         }
-        if($category !="") {
+        if($category != "") {
             $alert->setCategory($category);
+        }
+        if($finished != "") {
+            if ($finished) {
+                $alert->setFinishedAt( new \DateTime() );
+            } else {
+                $alert->setFinishedAt(null);
+            }
         }
 
         //beurk dégeulasse mais probleme pour valider le formulaire
         if( $positionLat == ""
             &&  $category == ""
-            && $positionLong == "" ) {
+            &&  $finished == ""
+            && $positionLong == ""
+        ) {
             $errors[]= "aucun parametre";
         }
 
@@ -256,24 +266,24 @@ class AlertController extends FOSRestController
 
     }
 
-    private function processForm(Alert      $alert, array $parameters, $method = "PUT")
-    {
-        $form = $this->get('form.factory')->create(new AlertFormType(), $alert, array('method' => $method));
-
-        $clearIfMissing =   ('PATCH' !== $method);
-
-        $form->submit($parameters, $clearIfMissing);
-        if ($form->isValid()) {
-
-            $page = $form->getData();
-            $this->om->persist($page);
-            $this->om->flush($page);
-
-            return $page;
-        }
-
-        throw new InvalidFormException('Invalid submitted data', $form);
-    }
+//    private function processForm(Alert      $alert, array $parameters, $method = "PUT")
+//    {
+//        $form = $this->get('form.factory')->create(new AlertFormType(), $alert, array('method' => $method));
+//
+//        $clearIfMissing =   ('PATCH' !== $method);
+//
+//        $form->submit($parameters, $clearIfMissing);
+//        if ($form->isValid()) {
+//
+//            $page = $form->getData();
+//            $this->om->persist($page);
+//            $this->om->flush($page);
+//
+//            return $page;
+//        }
+//
+//        throw new InvalidFormException('Invalid submitted data', $form);
+//    }
 
 
 
