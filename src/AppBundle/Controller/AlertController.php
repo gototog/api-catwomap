@@ -105,7 +105,11 @@ class AlertController extends FOSRestController
      */
     public function deleteAlertAction($id)
     {
-        $this->get("service.alert")->deleteAlertById($id);
+        try {
+            $this->get("service.alert")->deleteAlertById($id);
+        } catch(NoResultException $e) {
+            throw $this->createNotFoundException("pas d'alerte d'id $id");
+        }
     }
 
 
@@ -147,43 +151,43 @@ class AlertController extends FOSRestController
 
     }
 
-    /**
-     * @ApiDoc(
-     *  resource=true,
-     *  description="Met à jour une alerte",
-     *  statusCodes = {
-     *     204 = "Retourné lorsque bien modifié",
-     *     400 = "Retourné lorsque probleme de paramètre invalide",
-     *     404 = "Retourné quand l'alerte n'est pas trouvé"
-     *   }
-     * )
-     * @Route("/alerts/{id}", name="alert_update")
-     * @Method("PUT")
-     */
-    public function updateAlertAction(Request $request, $id) {
-
-        try {
-            $alert = $this->get('service.alert')->getAlertById($id);
-        } catch(NoResultException $e) {
-            throw $this->createNotFoundException("Alerte d'id $id n'existe pas");
-        }
-
-        $form = $this->createForm(new AlertFormType(), $alert);
-        $form->handleRequest($request);
-
-        if ($form->isValid()) {
-
-            $this->get('service.alert')->updateAlert($form->getData(), $id);
-
-            $response = new Response();
-            $response->setStatusCode(204);
-
-            return $response;
-        }
-
-        return View::create($form, 400);
-
-    }
+//    /**
+//     * @ApiDoc(
+//     *  resource=true,
+//     *  description="Met à jour une alerte",
+//     *  statusCodes = {
+//     *     204 = "Retourné lorsque bien modifié",
+//     *     400 = "Retourné lorsque probleme de paramètre invalide",
+//     *     404 = "Retourné quand l'alerte n'est pas trouvé"
+//     *   }
+//     * )
+//     * @Route("/alerts/{id}", name="alert_update")
+//     * @Method("PUT")
+//     */
+//    public function updateAlertAction(Request $request, $id) {
+//
+//        try {
+//            $alert = $this->get('service.alert')->getAlertById($id);
+//        } catch(NoResultException $e) {
+//            throw $this->createNotFoundException("Alerte d'id $id n'existe pas");
+//        }
+//
+//        $form = $this->createForm(new AlertFormType(), $alert);
+//        $form->handleRequest($request);
+//
+//        if ($form->isValid()) {
+//
+//            $this->get('service.alert')->updateAlert($form->getData(), $id);
+//
+//            $response = new Response();
+//            $response->setStatusCode(204);
+//
+//            return $response;
+//        }
+//
+//        return View::create($form, 400);
+//
+//    }
     /**
      * @ApiDoc(
      *  resource=true,

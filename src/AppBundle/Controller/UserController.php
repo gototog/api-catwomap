@@ -11,7 +11,6 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\User;
 use AppBundle\Form\UserFormType;
-use AppBundle\Form\UserProfilFormType;
 use Doctrine\ORM\NoResultException;
 use FOS\RestBundle\Controller\Annotations\RequestParam;
 use FOS\RestBundle\Controller\FOSRestController;
@@ -72,26 +71,26 @@ class UserController extends FOSRestController
         return $user;
     }
 
-    /**
-     * @ApiDoc(
-     *  resource=true,
-     *  description="Supprime un utilisateur par son id",
-     *  statusCodes = {
-     *     204 = "Retourné si bien supprimé",
-     *     404 = "Retourné quand l'utilisatesur n'est pas trouvé"
-     *   }
-     * )
-     * @Route("/users/{id}", name="user_delete")
-     * @Method("DELETE")
-     */
-    public function deleteUserAction($id)
-    {
-        try {
-            $this->get('service.user')->deleteUserById($id);
-        } catch(NoResultException $e) {
-            throw $this->createNotFoundException("Utilisateur d'id $id n'existe pas");
-        }
-    }
+//    /**
+//     * @ApiDoc(
+//     *  resource=true,
+//     *  description="Supprime un utilisateur par son id",
+//     *  statusCodes = {
+//     *     204 = "Retourné si bien supprimé",
+//     *     404 = "Retourné quand l'utilisatesur n'est pas trouvé"
+//     *   }
+//     * )
+//     * @Route("/users/{id}", name="user_delete")
+//     * @Method("DELETE")
+//     */
+//    public function deleteUserAction($id)
+//    {
+//        try {
+//            $this->get('service.user')->deleteUserById($id);
+//        } catch(NoResultException $e) {
+//            throw $this->createNotFoundException("Utilisateur d'id $id n'existe pas");
+//        }
+//    }
     /**
      * @ApiDoc(
      *  description="Ajoute un utilisateur",
@@ -128,41 +127,41 @@ class UserController extends FOSRestController
 
     }
 
-    /**
-     * @ApiDoc(
-     *  resource=true,
-     *  description="Met à jour un utilisateur",
-     *  statusCodes = {
-     *     204 = "Retourné lorsque bien modifié",
-     *     400 = "Retourné lorsque probleme de paramètre invalide",
-     *     404 = "Retourné quand l'utilisateur n'est pas trouvé"
-     *   }
-     * )
-     * @Route("/users/{id}", name="user_update")
-     * @Method("PUT")
-     */
-    public function updateUserAction(Request $request, $id) {
-        try {
-            $user = $this->get('service.user')->getUserById($id);
-        } catch(NoResultException $e) {
-            throw $this->createNotFoundException("Utilisateur d'id $id n'existe pas");
-        }
-        $form = $this->createForm(new UserProfilFormType(), $user);
-        $form->handleRequest($request);
-
-        if ($form->isValid()) {
-
-            $this->get('service.user')->updateUser( $form->getData() );
-
-            $response = new Response();
-            $response->setStatusCode(Codes::HTTP_ACCEPTED);
-
-            return $response;
-        }
-
-        return View::create($form, Codes::HTTP_BAD_REQUEST);
-
-    }
+//    /**
+//     * @ApiDoc(
+//     *  resource=true,
+//     *  description="Met à jour un utilisateur",
+//     *  statusCodes = {
+//     *     204 = "Retourné lorsque bien modifié",
+//     *     400 = "Retourné lorsque probleme de paramètre invalide",
+//     *     404 = "Retourné quand l'utilisateur n'est pas trouvé"
+//     *   }
+//     * )
+//     * @Route("/users/{id}", name="user_update")
+//     * @Method("PUT")
+//     */
+//    public function updateUserAction(Request $request, $id) {
+//        try {
+//            $user = $this->get('service.user')->getUserById($id);
+//        } catch(NoResultException $e) {
+//            throw $this->createNotFoundException("Utilisateur d'id $id n'existe pas");
+//        }
+//        $form = $this->createForm(new UserProfilFormType(), $user);
+//        $form->handleRequest($request);
+//
+//        if ($form->isValid()) {
+//
+//            $this->get('service.user')->updateUser( $form->getData() );
+//
+//            $response = new Response();
+//            $response->setStatusCode(Codes::HTTP_ACCEPTED);
+//
+//            return $response;
+//        }
+//
+//        return View::create($form, Codes::HTTP_BAD_REQUEST);
+//
+//    }
 
 
     /**

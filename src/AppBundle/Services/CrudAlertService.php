@@ -50,6 +50,7 @@ class CrudAlertService
         $alert =  $this->alertRepository->getAlertById($id);
 
         $this->em->remove($alert);
+        $this->em->flush();
     }
 
     /**

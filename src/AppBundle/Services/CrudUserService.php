@@ -49,7 +49,15 @@ class CrudUserService
     public function deleteUserById($id) {
         $user =  $this->userRepository->getUserById($id);
 
+        foreach($user->getUserHelpAlerts() as $userHelpAlert) {
+            $this->em->remove($userHelpAlert);
+        }
+        $this->em->flush();
+        foreach($user->getAlertsCreated() as $alert) {
+            $this->em->remove($alert);
+        }
         $this->em->remove($user);
+        $this->em->flush();
     }
 
     /**
