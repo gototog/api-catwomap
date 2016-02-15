@@ -22,6 +22,7 @@ class UserFormType extends AbstractType {
         $builder->add('lastname');
         $builder->add('email');
         $builder->add('password');
+        $builder->add('photo');
     }
 
     public function setDefaultOptions(OptionsResolver $resolver)

@@ -67,15 +67,18 @@ class CrudUserService
      */
     public function createUser(User $user) {
 
-        $infos = Geocoder::getLocation($user->getPositionLat(), $user->getPositionLong() );
+        if($user->getPositionLat() . $user->getPositionLong()  != "" ) {
+            $infos = Geocoder::getLocation($user->getPositionLat(), $user->getPositionLong() );
 
-        $city = Geocoder::getCityFromAddress($infos);
-        $department = Geocoder::getDepartmentFromAddress($infos);
-        $country = Geocoder::getCountryFromAddress($infos);
+            $city = Geocoder::getCityFromAddress($infos);
+            $department = Geocoder::getDepartmentFromAddress($infos);
+            $country = Geocoder::getCountryFromAddress($infos);
 
-        $user->setPositionCity($city);
-        $user->setPositionDep($department);
-        $user->setPositionCountry($country);
+            $user->setPositionCity($city);
+            $user->setPositionDep($department);
+            $user->setPositionCountry($country);
+        }
+
 
         $this->em->persist($user);
         $this->em->flush();

@@ -176,6 +176,7 @@ class UserController extends FOSRestController
      * )
      * @RequestParam(name="positionLong", requirements="[-+]?(\d*[.])?\d+", description="longitude like 31.487")
      * @RequestParam(name="positionLat", requirements="[-+]?(\d*[.])?\d+", description="latitude like -31.487")
+     * @RequestParam(name="photo", description="url of photo")
      * @Route("/users/{id}", name="user_patch")
      * @Method("PATCH")
      */
@@ -189,7 +190,13 @@ class UserController extends FOSRestController
         }
         $positionLat = $paramFetcher->get("positionLat", false);
         $positionLong = $paramFetcher->get("positionLong", false);
+        $photo = $paramFetcher->get("photo", false);
 
+        if (
+            ($photo != "")
+        ) {
+            $user->setPhoto($photo);
+        }
         if (
             ($positionLong != "" && $positionLat == "")
             || ($positionLong == "" && $positionLat != "")
@@ -203,6 +210,7 @@ class UserController extends FOSRestController
         //beurk dégeulasse mais probleme pour valider le formulaire
         if( $positionLat == ""
             && $positionLong == ""
+            && $photo == ""
         ) {
             $errors[]= "aucun parametre";
         }

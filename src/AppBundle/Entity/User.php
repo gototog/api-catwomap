@@ -67,25 +67,25 @@ class User
     /**
      * @var string
      *
-     * @ORM\Column(name="position_city", type="string", length=255)
+     * @ORM\Column(name="position_city", type="string", length=255, nullable=true)
      */
     private $positionCity;
     /**
      * @var string
      *
-     * @ORM\Column(name="position_dep", type="string", length=255)
+     * @ORM\Column(name="position_dep", type="string", length=255, nullable=true)
      */
     private $positionDep;
     /**
      * @var string
      *
-     * @ORM\Column(name="position_country", type="string", length=255)
+     * @ORM\Column(name="position_country", type="string", length=255, nullable=true)
      */
     private $positionCountry;
     /**
      * @var string
      *
-     * @ORM\Column(name="photo", type="string", length=255, nullable=true)
+     * @ORM\Column(name="photo", type="text", nullable=true)
      */
     private $photo;
 
