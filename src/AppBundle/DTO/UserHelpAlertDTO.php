@@ -23,7 +23,7 @@ class UserHelpAlertDTO
     public  function __construct(UserHelpAlert $helpAlertDTO)
     {
         $this->id             = $helpAlertDTO->getId() ;
-        $this->user           = $helpAlertDTO->getUser() ;
+        $this->user           = new UserDTO( $helpAlertDTO->getUser() ) ;
         $this->isDeprecated   = $helpAlertDTO->isDeprecated() ;
         $this->hasCalledPolice   = $helpAlertDTO->hasCalledPolice() ;
 

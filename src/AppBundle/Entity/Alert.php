@@ -16,6 +16,9 @@ class Alert
     const TYPE_EMERGENCY = "EMERGENCY";
     const TYPE_ALERT = "ALERT";
     const TYPE_DANGER = "DANGER";
+    const STATUS_ACTIVE = "ACTIVE";
+    const STATUS_CLOSED = "CLOSED";
+    const STATUS_DEPRECATED = "DEPRECATED";
 
     const BUNDLE_NAME = "AppBundle:Alert";
     /**
@@ -65,6 +68,12 @@ class Alert
      * @ORM\Column(name="category", type="string", length=255)
      */
     private $category;
+    /**
+     * @var string
+     * @Assert\NotBlank()
+     * @ORM\Column(name="status", type="string", length=255)
+     */
+    private $status = self::STATUS_ACTIVE;
 
     /**
      * @var \DateTime
@@ -261,6 +270,22 @@ class Alert
     public function setUserHelpAlerts( $userHelpAlerts)
     {
         $this->userHelpAlerts = $userHelpAlerts;
+    }
+
+    /**
+     * @return string
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * @param string $status
+     */
+    public function setStatus($status)
+    {
+        $this->status = strtoupper($status);
     }
 
 

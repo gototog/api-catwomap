@@ -21,6 +21,7 @@ class AlertDTO
     public $positionDep;
     public $positionCountry;
     public $category;
+    public $status;
     public $createdAt;
     public $finishedAt;
     public $userCreator;
@@ -40,6 +41,7 @@ class AlertDTO
         $this->positionDep      = $alert->getPositionDep();
         $this->positionCountry  = $alert->getPositionCountry();
         $this->category         = $alert->getCategory();
+        $this->status           = $alert->getStatus();
         $this->createdAt        = $alert->getCreatedAt();
         $this->finishedAt       = $alert->getFinishedAt();
         $user = new UserDTO( $alert->getUserCreator() );

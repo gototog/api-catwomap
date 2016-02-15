@@ -41,9 +41,10 @@ class AlertController extends FOSRestController
      *     }
      * )
      * @QueryParam(name="creator_id", requirements="\d+", description="id of the user")
-     * @QueryParam(name="dep", description="departement number like '38'")
+     * @QueryParam(name="dep", description="departement number like 'Isère'")
      * @QueryParam(name="city", requirements="[a-z]+", description="city name like 'grenoble' ")
      * @QueryParam(name="country", requirements="[a-z]+", description="country name 'france' ")
+     * @QueryParam(name="status", requirements="[a-z]+", description="status name 'active', 'closed' ")
      * @Route("/alerts", name="alerts_get")
      * @Method("GET")
      *
@@ -54,7 +55,8 @@ class AlertController extends FOSRestController
         $country = $paramFetcher->get("country", false);
         $city = $paramFetcher->get("city", false);
         $creator = $paramFetcher->get("creator_id", false);
-        $alerts = $this->get('service.alert')->getAlerts($city, $department, $country, $creator);
+        $status = $paramFetcher->get("status", false);
+        $alerts = $this->get('service.alert')->getAlerts($city, $department, $country, $creator, $status);
 
 
         return View::create($alerts, Codes::HTTP_OK);
