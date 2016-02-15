@@ -7,6 +7,7 @@ use AppBundle\Entity\User;
 use AppBundle\Repository\AlertRepository;
 use AppBundle\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 
 class CrudUserService
@@ -28,6 +29,16 @@ class CrudUserService
      */
     public function getUserById($id) {
         $user =  $this->userRepository->getUserById($id);
+        return new UserDTO($user);
+    }
+
+    /**
+     * @param $id
+     *
+     * @return UserDTO
+     */
+    public function getUserByEmail($email) {
+        $user =  $this->userRepository->getUserByEmail($email);
         return new UserDTO($user);
     }
 
@@ -115,14 +126,19 @@ class CrudUserService
      * @return bool
      */
     public function isUserCredentialsOk($email, $password) {
+        $bool = false;
         try {
             $user =  $this->userRepository->getUserByEmail($email);
 
+            $bool = $user->checkPassword($password);
         } catch(NoResultException $e) {
             //on ne sonde pas la base ;)
             return false;
+        } catch(NonUniqueResultException $e) {
+            //on ne sonde pas la base ;)
+            return false;
         } finally {
-            return $user->checkPassword($password);
+            return $bool;
         }
 
     }

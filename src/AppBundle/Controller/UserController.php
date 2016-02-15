@@ -259,7 +259,10 @@ class UserController extends FOSRestController
             $isAuthenticated = $this->get('service.user')->isUserCredentialsOk($email, $password);
 
             if($isAuthenticated) {
+
                 $response->setStatusCode(Codes::HTTP_ACCEPTED);
+                $user =  $this->get('service.user')->getUserByEmail($email);
+                return $user;
             } else {
                 $response->setStatusCode(Codes::HTTP_PRECONDITION_FAILED);
             }
