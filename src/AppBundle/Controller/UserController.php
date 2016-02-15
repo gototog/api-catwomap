@@ -176,7 +176,7 @@ class UserController extends FOSRestController
      * )
      * @RequestParam(name="positionLong", requirements="[-+]?(\d*[.])?\d+", description="longitude like 31.487")
      * @RequestParam(name="positionLat", requirements="[-+]?(\d*[.])?\d+", description="latitude like -31.487")
-     * @Route("/users/{id}", name="alert_patch")
+     * @Route("/users/{id}", name="user_patch")
      * @Method("PATCH")
      */
     public function patchUserAction( $id, ParamFetcherInterface $paramFetcher) {

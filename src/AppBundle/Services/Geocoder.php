@@ -60,9 +60,12 @@ class Geocoder
 
     static public function getDepartmentFromAddress(array $results) {
         foreach( $results as $result) {
-            if(isset($result["types"][0]) and $result["types"][0] == "postal_code" ) {
-                return substr( $result["long_name"] ,0,2 );
+            if(isset($result["types"][0]) and $result["types"][0] == "administrative_area_level_2" ) {
+                return $result["long_name"];
             }
+//            if(isset($result["types"][0]) and $result["types"][0] == "postal_code" ) {
+//                return substr( $result["long_name"] ,0,2 );
+//            }
         }
         return false;
     }
