@@ -66,6 +66,17 @@ class CrudUserService
      * @return UserDTO
      */
     public function createUser(User $user) {
+
+        $infos = Geocoder::getLocation($user->getPositionLat(), $user->getPositionLong() );
+
+        $city = Geocoder::getCityFromAddress($infos);
+        $department = Geocoder::getDepartmentFromAddress($infos);
+        $country = Geocoder::getCountryFromAddress($infos);
+
+        $user->setPositionCity($city);
+        $user->setPositionDep($department);
+        $user->setPositionCountry($country);
+
         $this->em->persist($user);
         $this->em->flush();
 
@@ -78,6 +89,17 @@ class CrudUserService
      * @return UserDTO
      */
     public function updateUser(User $user) {
+
+        $infos = Geocoder::getLocation($user->getPositionLat(), $user->getPositionLong() );
+
+        $city = Geocoder::getCityFromAddress($infos);
+        $department = Geocoder::getDepartmentFromAddress($infos);
+        $country = Geocoder::getCountryFromAddress($infos);
+
+        $user->setPositionCity($city);
+        $user->setPositionDep($department);
+        $user->setPositionCountry($country);
+
         $this->em->persist($user);
         $this->em->flush();
         return new UserDTO($user);

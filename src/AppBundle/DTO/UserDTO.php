@@ -18,6 +18,9 @@ class UserDTO
     public $email;
     public $positionLat;
     public $positionLong;
+    public $positionCity;
+    public $positionDep;
+    public $positionCountry;
     public $photo;
 
     public  function __construct(User $user)
@@ -28,6 +31,9 @@ class UserDTO
         $this->email = $user->getEmail() ;
         $this->positionLong = $user->getPositionLong() ;
         $this->positionLat = $user->getPositionLat() ;
+        $this->positionCity     = $user->getPositionCity();
+        $this->positionDep      = $user->getPositionDep();
+        $this->positionCountry  = $user->getPositionCountry();
         $this->photo = $user->getPhoto() ;
     }
 }

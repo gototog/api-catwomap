@@ -64,7 +64,24 @@ class User
      * @ORM\Column(name="position_lat", type="string", length=255, nullable=true)
      */
     private $positionLat;
-
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="position_city", type="string", length=255)
+     */
+    private $positionCity;
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="position_dep", type="string", length=255)
+     */
+    private $positionDep;
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="position_country", type="string", length=255)
+     */
+    private $positionCountry;
     /**
      * @var string
      *
@@ -195,6 +212,55 @@ class User
     {
         $this->positionLat = $positionLat;
     }
+
+    /**
+     * @return string
+     */
+    public function getPositionCity()
+    {
+        return $this->positionCity;
+    }
+
+    /**
+     * @param string $positionCity
+     */
+    public function setPositionCity($positionCity)
+    {
+        $this->positionCity = $positionCity;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPositionDep()
+    {
+        return $this->positionDep;
+    }
+
+    /**
+     * @param string $positionDep
+     */
+    public function setPositionDep($positionDep)
+    {
+        $this->positionDep = $positionDep;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPositionCountry()
+    {
+        return $this->positionCountry;
+    }
+
+    /**
+     * @param string $positionCountry
+     */
+    public function setPositionCountry($positionCountry)
+    {
+        $this->positionCountry = $positionCountry;
+    }
+
 
     /**
      * @return string

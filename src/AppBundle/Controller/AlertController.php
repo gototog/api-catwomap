@@ -200,8 +200,8 @@ class AlertController extends FOSRestController
      *     404 = "Retourné quand l'alerte n'est pas trouvé"
      *   }
      * )
-     * @RequestParam(name="positionLong", requirements="[-+]?(\d*[.])?\d+", description="longitude like 31.487")
-     * @RequestParam(name="positionLat", requirements="[-+]?(\d*[.])?\d+", description="latitude like -31.487")
+     * @RequestParam(name="positionLong", requirements="[-+]?(\d*[.])?\d+", description="longitude like 45.187637")
+     * @RequestParam(name="positionLat", requirements="[-+]?(\d*[.])?\d+", description="latitude like -5.773306")
      * @RequestParam(name="category", description="category name 'vol','help' ")
      * @RequestParam(name="finished",requirements="[0-1]", description="is the alert finished? ")
      * @Route("/alerts/{id}", name="alert_patch")
