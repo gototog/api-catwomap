@@ -54,7 +54,7 @@ class AlertController extends FOSRestController
         $country = $paramFetcher->get("country", false);
         $city = $paramFetcher->get("city", false);
         $creator = $paramFetcher->get("creator_id", false);
-        $alerts = $this->get('service.alert')->getAlerts($city, $department, $country);
+        $alerts = $this->get('service.alert')->getAlerts($city, $department, $country, $creator);
 
 
         return View::create($alerts, Codes::HTTP_OK);
@@ -90,27 +90,27 @@ class AlertController extends FOSRestController
         }
         return $alert;
     }
-
-    /**
-     * @ApiDoc(
-     *  resource=true,
-     *  description="Supprime une alerte par son id",
-     *  statusCodes = {
-     *     204 = "Retourné si bien supprimé",
-     *     404 = "Retourné quand l'alerte n'est pas trouvé"
-     *   }
-     * )
-     * @Route("/alerts/{id}", name="alert_delete")
-     * @Method("DELETE")
-     */
-    public function deleteAlertAction($id)
-    {
-        try {
-            $this->get("service.alert")->deleteAlertById($id);
-        } catch(NoResultException $e) {
-            throw $this->createNotFoundException("pas d'alerte d'id $id");
-        }
-    }
+//
+//    /**
+//     * @ApiDoc(
+//     *  resource=true,
+//     *  description="Supprime une alerte par son id",
+//     *  statusCodes = {
+//     *     204 = "Retourné si bien supprimé",
+//     *     404 = "Retourné quand l'alerte n'est pas trouvé"
+//     *   }
+//     * )
+//     * @Route("/alerts/{id}", name="alert_delete")
+//     * @Method("DELETE")
+//     */
+//    public function deleteAlertAction($id)
+//    {
+//        try {
+//            $this->get("service.alert")->deleteAlertById($id);
+//        } catch(NoResultException $e) {
+//            throw $this->createNotFoundException("pas d'alerte d'id $id");
+//        }
+//    }
 
 
     /**

@@ -49,7 +49,7 @@ class AlertRepository extends  EntityRepository
      *
      * @return Alert[]
      */
-    public function getAlerts($city, $department, $country) {
+    public function getAlerts($city, $department, $country, $creator) {
         $qb = $this->createQueryBuilder('alert');
         $qb->innerJoin("alert.userCreator" , "user_creator");
         $qb->leftJoin("alert.userHelpAlerts" , "user_help_alerts");
@@ -73,6 +73,11 @@ class AlertRepository extends  EntityRepository
             $qb
                 ->andWhere('alert.positionCountry = :country')
                 ->setParameter('country',$country);
+        }
+        if(! is_null($creator)) {
+            $qb
+                ->andWhere('alert.userCreator = :creator')
+                ->setParameter('creator',$creator);
         }
 
         return $qb->getQuery()->getResult();
