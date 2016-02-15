@@ -118,11 +118,29 @@ class CrudAlertService
      *
      * @return AlertDTO
      */
-    public function updateUserHelpAlert(UserHelpAlert $alert) {
+    public function updateUserHelpAlert(UserHelpAlert $help) {
 
+
+
+        $this->em->persist($help);
+        $this->em->flush();
+
+
+        $this->checkIfAlertIsDeprecated($help->getAlert());
+
+
+
+        return new UserHelpAlertDTO($help);
+    }
+
+    private function checkIfAlertIsDeprecated(Alert $alert) {
+        $nb = $this->alertRepository->countDeprecated($alert->getId());
+        if($nb > 1) {
+            $alert->setStatus(Alert::STATUS_DEPRECATED);
+            $alert->setFinishedAt(new \DateTime());
+        }
         $this->em->persist($alert);
         $this->em->flush();
-        return new UserHelpAlertDTO($alert);
     }
 
 

@@ -202,8 +202,8 @@ class AlertController extends FOSRestController
      * )
      * @RequestParam(name="positionLong", requirements="[-+]?(\d*[.])?\d+", description="longitude like 31.487")
      * @RequestParam(name="positionLat", requirements="[-+]?(\d*[.])?\d+", description="latitude like -31.487")
-     * @RequestParam(name="category", description="category name 'vol' ")
-     * @RequestParam(name="finished",requirements="[0-1]", description="category name 'vol' ")
+     * @RequestParam(name="category", description="category name 'vol','help' ")
+     * @RequestParam(name="finished",requirements="[0-1]", description="is the alert finished? ")
      * @Route("/alerts/{id}", name="alert_patch")
      * @Method("PATCH")
      */

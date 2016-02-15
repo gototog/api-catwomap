@@ -39,12 +39,12 @@ class UserHelpAlert
      * @var bool
      * @ORM\Column(name="is_deprecated", type="boolean")
      */
-    private $isDeprecated;
+    private $isDeprecated = false;
     /**
      * @var bool
      * @ORM\Column(name="has_called_police", type="boolean")
      */
-    private $hasCalledPolice;
+    private $hasCalledPolice= false;
 
     /**
      * Get id

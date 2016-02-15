@@ -88,6 +88,26 @@ class AlertRepository extends  EntityRepository
         return $qb->getQuery()->getResult();
     }
 
+    public function countDeprecated($id)
+    {
+        $count = 0;
+        $qb = $this->createQueryBuilder('alert');
+        $qb
+            ->andWhere('alert.id = :id')
+            ->setParameter('id',$id)
+        ;
+        /** @var Alert $alert */
+        $alert =  $qb->getQuery()->getSingleResult();
+
+        foreach($alert->getUserHelpAlerts() as $help) {
+            if($help->isDeprecated() == true) {
+                $count++;
+            }
+        }
+
+        return $count;
+    }
+
 //    private function filterByCityNotNull(QueryBuilder &$qb, $city) {
 //        if(! is_null($city)) {
 //            $qb
