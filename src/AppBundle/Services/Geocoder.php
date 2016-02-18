@@ -15,7 +15,7 @@ class Geocoder
     static private  $url = "https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyBudmeEvv-AOHYG2Vp0xjJ758gEPkhGjn8&latlng=";
 
     static public function getLocation($lat, $lng){
-        $url = self::$url . urlencode($lng).','.urlencode($lat);
+        $url = self::$url . urlencode($lat).','.urlencode($lng);
 
         $resp_json = self::curl_file_get_contents($url);
         $resp = json_decode($resp_json, true);
