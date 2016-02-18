@@ -89,7 +89,10 @@ class CrudUserService
             $user->setPositionDep($department);
             $user->setPositionCountry($country);
         }
-
+        $user->setPassword(sha1( $user->getPassword() ) );
+        if( $user->getPhoto() == "") {
+            $user->setPhoto("https://randomuser.me/api/portraits/med/men/54.jpg");
+        }
 
         $this->em->persist($user);
         $this->em->flush();

@@ -85,9 +85,9 @@ class User
     /**
      * @var string
      *
-     * @ORM\Column(name="photo", type="text", nullable=true)
+     * @ORM\Column(name="photo", type="text")
      */
-    private $photo;
+    private $photo = "https://randomuser.me/api/portraits/med/men/54.jpg";
 
     /**
      * @var Alert

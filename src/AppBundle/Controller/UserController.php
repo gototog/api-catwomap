@@ -106,6 +106,7 @@ class UserController extends FOSRestController
      */
     public function createUserAction(Request $request) {
 
+
         $form = $this->createForm(UserFormType::class, new User());
         $form->handleRequest($request);
 
@@ -122,7 +123,6 @@ class UserController extends FOSRestController
 
             return $response;
         }
-
         return View::create($form, Codes::HTTP_BAD_REQUEST);
 
     }
