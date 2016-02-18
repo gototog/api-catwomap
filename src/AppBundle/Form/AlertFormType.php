@@ -21,6 +21,7 @@ class AlertFormType extends AbstractType {
         $builder->add('positionLong');
         $builder->add('positionLat');
         $builder->add('category');
+        $builder->add('description');
     }
 
     public function setDefaultOptions(OptionsResolver $resolver)

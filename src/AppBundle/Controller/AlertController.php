@@ -203,6 +203,7 @@ class AlertController extends FOSRestController
      * @RequestParam(name="positionLong", requirements="[-+]?(\d*[.])?\d+", description="longitude like 45.187637")
      * @RequestParam(name="positionLat", requirements="[-+]?(\d*[.])?\d+", description="latitude like -5.773306")
      * @RequestParam(name="category", description="category name 'vol','help' ")
+     * @RequestParam(name="description", description="description")
      * @RequestParam(name="finished",requirements="[0-1]", description="is the alert finished? ")
      * @Route("/alerts/{id}", name="alert_patch")
      * @Method("PATCH")
@@ -220,6 +221,7 @@ class AlertController extends FOSRestController
         $positionLat = $paramFetcher->get("positionLat", false);
         $positionLong = $paramFetcher->get("positionLong", false);
         $category = $paramFetcher->get("category", false);
+        $description = $paramFetcher->get("description", false);
         $finished = $paramFetcher->get("finished", false);
 
 
@@ -237,6 +239,9 @@ class AlertController extends FOSRestController
         if($category != "") {
             $alert->setCategory($category);
         }
+        if($description != "") {
+            $alert->setDescription($description);
+        }
         if($finished != "") {
             if ($finished) {
                 $alert->setFinishedAt( new \DateTime() );
@@ -249,6 +254,7 @@ class AlertController extends FOSRestController
         if( $positionLat == ""
             &&  $category == ""
             &&  $finished == ""
+            &&  $description == ""
             && $positionLong == ""
         ) {
             $errors[]= "aucun parametre";

@@ -41,6 +41,7 @@ class AlertRepository extends  EntityRepository
         $qb
             ->andWhere('alert.user = :user')
             ->setParameter('user',$user)
+            ->addOrderBy("alert.createdAt", 'desc')
         ;
         return $qb->getQuery()->getSingleResult();
     }
@@ -58,6 +59,7 @@ class AlertRepository extends  EntityRepository
         $qb->addSelect("user_creator");
         $qb->addSelect("user_help_alerts");
         $qb->addSelect("user_helping");
+        $qb->addOrderBy("alert.createdAt", 'desc');
 
         if(! is_null($city)) {
             $qb

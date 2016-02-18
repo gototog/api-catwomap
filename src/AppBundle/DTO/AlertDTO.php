@@ -24,6 +24,7 @@ class AlertDTO
     public $status;
     public $createdAt;
     public $finishedAt;
+    public $description;
     public $userCreator;
     public $userHelpAlerts;
     public $nbAlertsDeprecated;
@@ -44,6 +45,7 @@ class AlertDTO
         $this->status           = $alert->getStatus();
         $this->createdAt        = $alert->getCreatedAt();
         $this->finishedAt       = $alert->getFinishedAt();
+        $this->description       = $alert->getDescription();
         $user = new UserDTO( $alert->getUserCreator() );
         $this->userCreator      = $user;
         $nbDeprecated = 0;
