@@ -72,7 +72,7 @@ class Alert
     /**
      * @var string
      * @Assert\NotBlank()
-     * @ORM\Column(name="description", type="text")
+     * @ORM\Column(name="description", type="text", nullable=true)
      */
     private $description;
     /**
